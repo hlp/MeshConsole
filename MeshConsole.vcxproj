@@ -72,10 +72,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\inc\IgesExporter.cpp" />
+    <ClCompile Include="src\inc\inc_AcisExporter.cpp" />
     <ClCompile Include="src\inc\inc_DxfSaver.cpp" />
+    <ClCompile Include="src\inc\VrmlExporter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\inc\AcisExporter.h" />
     <ClInclude Include="include\inc\DxfSaver.h" />
+    <ClInclude Include="include\inc\Exporter.h" />
+    <ClInclude Include="include\inc\IgesExporter.h" />
+    <ClInclude Include="include\inc\VrmlExporter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

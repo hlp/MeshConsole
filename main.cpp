@@ -13,6 +13,9 @@
 #include <CGAL/make_mesh_3.h>
 
 #include <inc/DxfSaver.h>
+#include <inc/AcisExporter.h>
+#include <inc/VrmlExporter.h>
+#include <inc/IgesExporter.h>
 
 // Domain
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
@@ -97,7 +100,7 @@ void parse_args(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
-    output_name = "mesh.dxf";
+    output_name = "mesh";
 
     parse_args(argc, argv);
 
@@ -117,7 +120,7 @@ int main(int argc, char* argv[]) {
 
     //c3t3.output_to_medit(medit_file);
 
-    inc::DxfSaver saver(output_name);
+    inc::IgesExporter saver(output_name);
 
     saver.begin();
     
@@ -129,7 +132,7 @@ int main(int argc, char* argv[]) {
                 it->vertex(i)->point().z());
         }
         */
-
+        /*
         saver.write_triangle(it->vertex(0)->point().x(),
             it->vertex(0)->point().y(),
             it->vertex(0)->point().z(),
@@ -169,6 +172,20 @@ int main(int argc, char* argv[]) {
             it->vertex(2)->point().x(),
             it->vertex(2)->point().y(),
             it->vertex(2)->point().z());
+        */
+
+        saver.write_tetrahedron(it->vertex(0)->point().x(),
+            it->vertex(0)->point().y(),
+            it->vertex(0)->point().z(),
+            it->vertex(1)->point().x(),
+            it->vertex(1)->point().y(),
+            it->vertex(1)->point().z(),
+            it->vertex(2)->point().x(),
+            it->vertex(2)->point().y(),
+            it->vertex(2)->point().z(),
+            it->vertex(3)->point().x(),
+            it->vertex(3)->point().y(),
+            it->vertex(3)->point().z());
 
         if (split_layers)
             saver.add_layer();

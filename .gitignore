@@ -9,5 +9,8 @@ ipch
 *.png
 *.dxf
 *.exe
-
+*.iges
+*.igs
+*.wrl
+*.sat
 

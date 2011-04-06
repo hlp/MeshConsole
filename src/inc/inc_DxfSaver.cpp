@@ -31,8 +31,8 @@
 
 namespace inc {
 
-DxfSaver::DxfSaver(const std::string& file_name) :
-    file_name_(file_name) {
+DxfSaver::DxfSaver(const std::string& file_name) {
+    file_name_ = file_name + ".dwg";
     current_layer_ = 0;
     INC_EPSILON = 0.0001f;
 }

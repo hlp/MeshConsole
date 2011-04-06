@@ -33,9 +33,30 @@
     <ClCompile Include="src\inc\inc_DxfSaver.cpp">
       <Filter>Source Files\inc</Filter>
     </ClCompile>
+    <ClCompile Include="src\inc\inc_AcisExporter.cpp">
+      <Filter>Source Files\inc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\inc\VrmlExporter.cpp">
+      <Filter>Source Files\inc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\inc\IgesExporter.cpp">
+      <Filter>Source Files\inc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\inc\DxfSaver.h">
+      <Filter>Header Files\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\inc\Exporter.h">
+      <Filter>Header Files\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\inc\AcisExporter.h">
+      <Filter>Header Files\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\inc\VrmlExporter.h">
+      <Filter>Header Files\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\inc\IgesExporter.h">
       <Filter>Header Files\inc</Filter>
     </ClInclude>
   </ItemGroup>
