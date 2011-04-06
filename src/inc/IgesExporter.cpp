@@ -201,6 +201,90 @@ void IgesExporter::write_point_directory_entry(int line_start) {
     write_line(line_2);
 }
 
+void IgesExporter::write_line_directory_entry(int param_pointer) {
+    char l1[73];
+    char l2[73];
+
+    for (int i = 0; i < 73; ++i) {
+        l1[i] = ' ';
+        l2[i] = ' ';
+    }
+
+    l1[72] = '\0';
+    l2[72] = '\0';
+
+    std::string type_num = "110";
+
+    write_directory_entry(l1, type_num, 1);
+    write_directory_entry(l1, boost::lexical_cast<std::string>(param_pointer), 2);
+    write_directory_entry(l1, "0", 3);
+    write_directory_entry(l1, "0", 4);
+    write_directory_entry(l1, "-1", 5);
+    write_directory_entry(l1, "0", 6);
+    write_directory_entry(l1, "0", 7);
+    write_directory_entry(l1, "0", 8);
+    write_directory_entry(l1, "00000000", 9);
+    // nothing else is important / defined
+
+    write_directory_entry(l2, type_num, 1);
+    write_directory_entry(l2, "0", 2);
+    write_directory_entry(l2, "-1", 3);
+    write_directory_entry(l2, "7", 4); // always 7
+    write_directory_entry(l2, "0", 5);
+    write_directory_entry(l2, "0", 6);
+    write_directory_entry(l2, "0", 7);
+    write_directory_entry(l2, "3d Line", 8);
+    write_directory_entry(l2, "0", 9);
+
+    std::string line_1(l1);
+    std::string line_2(l2);
+
+    write_line(line_1);
+    write_line(line_2);
+}
+
+void IgesExporter::write_ruled_surface_directory_entry(int param_pointer) {
+    char l1[73];
+    char l2[73];
+
+    for (int i = 0; i < 73; ++i) {
+        l1[i] = ' ';
+        l2[i] = ' ';
+    }
+
+    l1[72] = '\0';
+    l2[72] = '\0';
+
+    std::string type_num = "118";
+
+    write_directory_entry(l1, type_num, 1);
+    write_directory_entry(l1, boost::lexical_cast<std::string>(param_pointer), 2);
+    write_directory_entry(l1, "0", 3);
+    write_directory_entry(l1, "0", 4);
+    write_directory_entry(l1, "-1", 5);
+    write_directory_entry(l1, "0", 6);
+    write_directory_entry(l1, "0", 7);
+    write_directory_entry(l1, "0", 8);
+    write_directory_entry(l1, "00000000", 9);
+    // nothing else is important / defined
+
+    write_directory_entry(l2, type_num, 1);
+    write_directory_entry(l2, "0", 2);
+    write_directory_entry(l2, "-1", 3);
+    write_directory_entry(l2, "5", 4); // always 5 
+    write_directory_entry(l2, "0", 5);
+    write_directory_entry(l2, "0", 6);
+    write_directory_entry(l2, "0", 7);
+    write_directory_entry(l2, "RuledSrf", 8);
+    write_directory_entry(l2, "0", 9);
+
+    std::string line_1(l1);
+    std::string line_2(l2);
+
+    write_line(line_1);
+    write_line(line_2);
+}
+
 void IgesExporter::write_node_directory_entry(int line_start) {
     char l1[73];
     char l2[73];
@@ -320,7 +404,7 @@ void IgesExporter::write_parameter_entry(std::string text, int pointer) {
     l[72] = '\0';
 
     for (int i = 8 * 8; i < 8 * 9; ++i) {
-        l[i] = '0';
+        l[i] = ' ';
     }
 
     strncpy(l, text.c_str(), text.length());
@@ -337,6 +421,25 @@ void IgesExporter::write_point_parameters(float x, float y, float z, int pointer
     write_parameter_entry(boost::lexical_cast<std::string>(z) + "D0,", pointer);
     write_parameter_entry("0;", pointer); // this is the coordinate system
 }
+
+void IgesExporter::write_line_parameters(float x1, float y1, float z1, float x2, float y2, float z2, int pointer) {
+    write_parameter_entry("110,", pointer); // type name
+    write_parameter_entry(boost::lexical_cast<std::string>(x1) + "D0,", pointer);
+    write_parameter_entry(boost::lexical_cast<std::string>(y1) + "D0,", pointer);
+    write_parameter_entry(boost::lexical_cast<std::string>(z1) + "D0,", pointer);
+    write_parameter_entry(boost::lexical_cast<std::string>(x2) + "D0,", pointer);
+    write_parameter_entry(boost::lexical_cast<std::string>(y2) + "D0,", pointer);
+    write_parameter_entry(boost::lexical_cast<std::string>(z2) + "D0;", pointer);
+}
+
+void IgesExporter::write_ruled_surface_parameters(int pointer_1, int pointer_2, int back_pointer) {
+    write_parameter_entry("118,", back_pointer); // type name
+    write_parameter_entry(boost::lexical_cast<std::string>(pointer_1) + ",", back_pointer);
+    write_parameter_entry(boost::lexical_cast<std::string>(pointer_2) + ",", back_pointer);
+    write_parameter_entry("1,", back_pointer); // direction flag
+    write_parameter_entry("1;", back_pointer); // developable flag
+}
+
 
 void IgesExporter::write_node_parameters(float x, float y, float z) {
     write_line("134,"); // type name
@@ -357,6 +460,10 @@ void IgesExporter::write_tetrahedron_parameters(const std::vector<int>& des) {
     write_line("16HLinearSolidTetra;"); // this is the coordinate system
 }
 
+/////////////////////////////////////////
+// FOOTER
+/////////////////////////////////////////
+
 void IgesExporter::write_footer() {
     char l[73];
 
@@ -372,10 +479,10 @@ void IgesExporter::write_footer() {
     char e4[9];
 
     for (int i = 0; i < 8; ++i) {
-        e1[i] = '0';
-        e2[i] = '0';
-        e3[i] = '0';
-        e4[i] = '0';
+        e1[i] = ' ';
+        e2[i] = ' ';
+        e3[i] = ' ';
+        e4[i] = ' ';
     }
 
     e1[0] = 'S';
@@ -391,8 +498,6 @@ void IgesExporter::write_footer() {
         it != section_line_numbers_.end(); ++it) {
         strings.push_back(boost::lexical_cast<std::string>(*it));
     }
-
-    // I think these need 0s padding them 
 
     strncpy(&e1[8-strings[0].length()], strings[0].c_str(), strings[0].length());
     strncpy(&e2[8-strings[1].length()], strings[1].c_str(), strings[1].length());
@@ -430,39 +535,45 @@ void IgesExporter::write_tetrahedron(float v1x, float v1y, float v1z, float v2x,
 
     nodes_.push_back(tetra);
 
-    //write_tetrahedron_directory_entry(paramater_line_count_);
+    de_pointers_.push_back(line_counter_);
+    write_point_directory_entry(paramater_line_count_);
+    paramater_line_count_ += 5;
 
-    for (int i = 0; i < 4; ++i) {
-        point_de_pointers_.push_back(line_counter_);
-        write_point_directory_entry(paramater_line_count_);
-        paramater_line_count_ += 5;
+    for (int i = 0; i < 3; ++i) {
+        de_pointers_.push_back(line_counter_);
+        write_line_directory_entry(paramater_line_count_);
+        paramater_line_count_ += 7;
     }
 
-    // we know that the paramaters for tetrahedrons will always take up 7 lines (cuz I say so)
-    //paramater_line_count_ += 8;
-
-    /*
-    std::vector<int> de;
-
     for (int i = 0; i < 4; ++i) {
-        de.push_back(line_counter_);
-
-        write_node_directory_entry(paramater_line_count_);
+        de_pointers_.push_back(line_counter_);
+        write_ruled_surface_directory_entry(paramater_line_count_);
         paramater_line_count_ += 5;
     }
-
-    nodes_de_.push_back(de);
-    */
 }
 
 void IgesExporter::write_all_tetra_nodes() {
-    std::vector<int>::iterator de_pointers_it = point_de_pointers_.begin();
+    std::vector<int>::iterator de_pointers_it = de_pointers_.begin();
 
     for (std::vector<std::vector<float>>::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
-        write_point_parameters(it->at(0), it->at(1), it->at(2), *de_pointers_it); ++de_pointers_it;
-        write_point_parameters(it->at(3), it->at(4), it->at(5), *de_pointers_it); ++de_pointers_it;
-        write_point_parameters(it->at(6), it->at(7), it->at(8), *de_pointers_it); ++de_pointers_it;
-        write_point_parameters(it->at(9), it->at(10), it->at(11), *de_pointers_it); ++de_pointers_it;
+
+        int point_de_pointer = *de_pointers_it; ++de_pointers_it;
+
+        write_point_parameters(it->at(0), it->at(1), it->at(2), point_de_pointer); 
+
+        int line_1_de_pointer = *de_pointers_it; ++de_pointers_it;
+        int line_2_de_pointer = *de_pointers_it; ++de_pointers_it;
+        int line_3_de_pointer = *de_pointers_it; ++de_pointers_it;
+
+        write_line_parameters(it->at(3), it->at(4), it->at(5), it->at(6), it->at(7), it->at(8), line_1_de_pointer); 
+        write_line_parameters(it->at(6), it->at(7), it->at(8), it->at(9), it->at(10), it->at(11), line_2_de_pointer); 
+        write_line_parameters(it->at(9), it->at(10), it->at(11), it->at(3), it->at(4), it->at(5), line_3_de_pointer); 
+
+        write_ruled_surface_parameters(point_de_pointer, line_1_de_pointer, *de_pointers_it); ++de_pointers_it;
+        write_ruled_surface_parameters(point_de_pointer, line_2_de_pointer, *de_pointers_it); ++de_pointers_it;
+        write_ruled_surface_parameters(point_de_pointer, line_3_de_pointer, *de_pointers_it); ++de_pointers_it;
+
+        write_ruled_surface_parameters(line_1_de_pointer, line_2_de_pointer, *de_pointers_it); ++de_pointers_it;
     }
 }
 

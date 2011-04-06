@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <vector>
 
 #include <inc/Exporter.h>
@@ -55,11 +56,15 @@ private:
     void write_directory_entry(char* l, std::string text, int index);
 
     void write_point_directory_entry(int line_start);
+    void write_line_directory_entry(int param_pointer);
+    void write_ruled_surface_directory_entry(int param_pointer);
     void write_node_directory_entry(int line_start);
     void write_tetrahedron_directory_entry(int line_start);
 
     void write_parameter_entry(std::string text, int pointer);
     void write_point_parameters(float x, float y, float z, int pointer);
+    void write_line_parameters(float x1, float y1, float z1, float x2, float y2, float z2, int pointer);
+    void write_ruled_surface_parameters(int pointer_1, int pointer_2, int back_pointer);
     void write_node_parameters(float x, float y, float z);
     void write_tetrahedron_parameters(const std::vector<int>& des);
 
@@ -72,7 +77,8 @@ private:
 
     int entity_count_;
 
-    std::vector<int> point_de_pointers_;
+    std::vector<int> de_pointers_;
+    std::vector<int> line_pointers_;
 
     std::vector<std::vector<int>> nodes_de_;
     std::vector<std::vector<float>> nodes_;
